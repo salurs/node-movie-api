@@ -14,6 +14,11 @@ const app = express();
 
 //db conntection
 const db =  require('./helper/db.js')();
+//config
+const config =  require('./config.js');
+app.set('api_secret_key', config.api_secret_key);
+//middleware
+const verifyToken =  require('./middleware/verify-token.js');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,6 +31,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
+app.use('/api', verifyToken);
 app.use('/api/movies', movie);
 app.use('/api/directors', director);
 
